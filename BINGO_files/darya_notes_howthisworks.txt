@@ -1,0 +1,113 @@
+understanding bingo_init.m
+Questions:
+1) what is input (n_in)
+2) what is pseudoinputs (nr_pi), state.psi: they use smaller number of time points from the sampled trajectory or rather the fine-grid to calculate the gaussian processes.
+
+data.ts{k} refers to k-th dataset (expression levels), data.ts{k}(i,j) refers to the expression level of i-th gene at the j-th time step of the k-th dataset.
+size(data.ts,1) = 1 always
+size(data.ts, 2) = number of datasets (signals)
+size(data.ts{k},1) = number of genes
+size(data.ts{k},2) = number of time points in data set k 
+we always need the same number of genes in all the datasets.
+stae.psi is a matrix with dim n*nr_pi --------- which ends up being (n+n_in, nr_pr), which is basically for every gene and input, we have nr_pi samples we want to work with.
+			      n_in*nr_pi
+
+
+First of all, it forces the data to have a Tsam structure which contains the sampling itmes of measurements. if the user doesn't specify  these, or only specifies a sampling period, it assumes constant sampling frequency. 
+so our data so far has for sure a data.Tsam where for each sample we have a time.
+
+Second of all, ensures all the time series have the same length.
+
+It also has mechanism for linear interpolation.
+
+Then it creates two more cells in data. Which are data.plot_index and data.fine_times, for better plotting.
+
+Then it scales such that the difference between maximum and minimum of each of time series is 1. (it doesn't ensure they are between 0 and 1). 
+
+n_in is the size of inputs. it is zero unless a cell called data.input exists.
+
+initial connectivity is assigned to a matrix called state.S, the prior on it is that it assumes 90% of the edges are not connected (edges are between n and n + n_in)
+
+initial beta is a matrix with n * n + n_in enteries initialized using a absolute value of random normal with variance 0.25 making sure no zeros.
+
+there's this thing called pseudoinputs that initialized with  two stacked on top of one another matrices: one is uniform random numbers between max and min a matrix of n * (nr_pi) which is the number of pseudo numbers. the other matrix is jsut uniform rnadom numbers between 0 and 1 n_in and nr_pi
+
+data.ts{k} refers to k-th dataset (expression levels), data.ts{k}(i,j) refers to the expression level of i-th gene at the j-th time step of the k-th dataset.
+
+The state of the sampler is initialized in the following way:
+ser is a matrix 4 * number of datasets
+The first row will be 1, end_time of dataset 1, 1, end time of dataset 1 under linear interpolation
+row 2 will end time of data set 1 + 1, end time of dataset 1 + end time of dataset 2,.. etc
+
+This ser will just be used to get xs
+xs:
+       |--- dataset 1 ---|--- dataset2 ---|--- dataset 3 ---|
+gene 1 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 2 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 3 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 4 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 5 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+
+
+Then it also tries to compute a value for speed and and just jumps without caring for time change, so nry is (expression[t+dt]-expression[t])^2/(dt) on average for each gene across datasets, and nry_q same idea but jsut raw squared jumps (expression[t+dt]-expression[t])^2 on average. this is just to have a guess on gamma and state.q 
+size of both : number of genes
+state.gamma = nry
+state.q = nry_q/20
+so far.
+
+
+also initialize cost value functions: state.P = very negative number
+state_j = very positive, size of both: number of genes
+
+
+
+
+now BINGO.m
+
+y = matrix of ts. each column: one data set
+Ser: 4 rows, row1: start index, row2: end index, each column one dataset, row 3: start index , row 4 end index but it will be indices to navigate this type of thing:
+       |--- dataset 1 ---|--- dataset2 ---|--- dataset 3 ---|
+gene 1 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 2 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 3 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 4 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+gene 5 |  . . . . . . .  |  . . . . . . . |  . . . . . . .  |
+for both find-grid and coarse data.
+
+
+derind_full seems to be the same as fine-grid except it doesn't include the last sample in each dataset because we won't compute the derivitive for that sample
+y_ind is the indices of the actual measurements:Fine-grid positions of real measurements
+d_full then contains the time steps (fine-grid i think) of everything is derind_full. (basically what to divide by to get the derivitive)
+
+
+Then they calculate this nry thing which is basically:                  (\delta y)^2
+				        \sigma         \Sigma          -------------- which is the sum of all variations, and divide this whole Time
+				   all data sets all coarse time steps     \delta t
+				   
+				   
+				   
+
+becasue this nry supposed to be an overestimation of variance of the brownian motion
+
+so now for interpolation,
+mm: fine-grid length of longest experiment
+x = pr.y
+y is coarse grid,
+x will be fine grid
+it's basically the matrix than can do interpolation
+
+Then there's this Pintc Brownian Bridge basis: sin(\pi k j/timestep)
+which gives the stochastic correction on top of linear interpolation:
+x_i = pr.y + pintc.ksi
+ksi are the latent coeff that gibbs sampler will update.
+
+
+
+
+
+
+
+
+
+
+
