@@ -16,12 +16,12 @@ parameters.eq = .0002;
 %link_pr = p / (1-p) where p is the prior probability for the existence of
 %a link. This controls the sparsity level of the network. Default is 1/n if
 %it is not given.
-parameters.link_pr = 0.01;
+parameters.link_pr = 0.001;
 
 %Heuristic temperature variable to speed up the topology sampling. Value 1
 %is default option if it is not set, and it corresponds to exactly correct
 %sampling.
-parameters.Theur = 1;
+parameters.Theur = 2.5;
 
 %Number of iterations (in the burn-in)
 parameters.its = 5000;

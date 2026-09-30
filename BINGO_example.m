@@ -35,14 +35,14 @@ data.Tsam={0.05};
 
 %Form the data structure
 clear('data')
-data.ts={X1,X2, X3,X4,X5};
+data.ts={[X1(:,1),X1],[X2(:,1),X2], [X3(:,1),X3],[X4(:,1),X4],[X5(:,1),X5]};
 data.Tsam={0.05};
 
-input1 = [ones(1,11), zeros(1,10); zeros(4,21)];
-input2 = [zeros(1,21); ones(1,11), zeros(1,10); zeros(3,21)];
-input3 = [zeros(2,21); ones(1,11), zeros(1,10); zeros(2,21)];
-input4 = [zeros(3,21); ones(1,11), zeros(1,10); zeros(1,21)];
-input5 = [zeros(4,21); ones(1,11), zeros(1,10)];
+input1 = [[0,ones(1,11), zeros(1,10)]; zeros(4,22)];
+input2 = [zeros(1,22); [0,ones(1,11), zeros(1,10)]; zeros(3,22)];
+input3 = [zeros(2,22); [0,ones(1,11), zeros(1,10)]; zeros(2,22)];
+input4 = [zeros(3,22); [0,ones(1,11), zeros(1,10)]; zeros(1,22)];
+input5 = [zeros(4,22); [0,ones(1,11), zeros(1,10)]];
 data.input = {input1, input2, input3, input4, input5};
 
 %Initialization
