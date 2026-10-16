@@ -24,7 +24,7 @@ parameters.link_pr = 0.001;
 parameters.Theur = 2.5;
 
 %Number of iterations (in the burn-in)
-parameters.its = 5000;
+parameters.its = 8000;
 
 %The number of steps in the trajectory between measurements. A good default
 %is 4, but the sampling gets faster if it is reduced.
@@ -156,9 +156,9 @@ nry_q = nry_q/Ttot;
 
 
 %Initialise other hyperparameters
-state.r = .0006*.1*ones(n,1);
+state.r = .006*.1*ones(n,1);
 state.gamma = nry;        
-state.q = nry_q/20;
+state.q = nry_q/10;
 state.ma = .1*ones(n,1);
 state.mb = .05*ones(n,1);
 

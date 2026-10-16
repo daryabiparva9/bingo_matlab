@@ -8,9 +8,9 @@
 % load('./Bingo_files/x.mat')
 
 addpath('./BINGO_files/')
-load('./BINGO_files/DREAM100_02_full.mat')
-load('./BINGO_files/DREAM100_02_groundtruth_symmterical.mat')
-load('./BINGO_files/DREAM100_02_groundtruth_oriented.mat')
+load('./BINGO_files/DREAM10_05_full.mat')
+load('./BINGO_files/DREAM10_05_groundtruth_symmterical.mat')
+load('./BINGO_files/DREAM10_05_groundtruth_oriented.mat')
 %% === EXAMPLE 1: Basic use ===
 
 %The data consist of two time series X1 and X2 with dimension 5. The first
@@ -51,9 +51,9 @@ data.input = {input1, input2, input3, input4, input5};
 % MCMC Burn-in
 [~,chain,~,state,stats]=BINGO(data,state,parameters);
 disp_stats(' BURN-IN COMPLETE',stats,chain,parameters.its)
-%%
+
 % Actual sampling
-parameters.its=10000;
+parameters.its=30000;
 [Plink,chain,xstore,state,stats]=BINGO(data,state,parameters);
 disp_stats(' SAMPLING COMPLETE',stats,chain,parameters.its)
 
