@@ -8,9 +8,9 @@
 
 %Load data
 addpath('./BINGO_files/')
-load('./BINGO_files/DREAM100_02_full.mat')
-load('./BINGO_files/DREAM100_02_groundtruth_symmterical.mat')
-load('./BINGO_files/DREAM100_02_groundtruth_oriented.mat')
+load('./BINGO_files/DREAM100_01_full.mat')
+load('./BINGO_files/DREAM100_01_groundtruth_symmterical.mat')
+load('./BINGO_files/DREAM100_01_groundtruth_oriented.mat')
 
 clear('data')
 data.ts = {[X1(:,1),X1],[X2(:,1),X2],[X3(:,1),X3],[X4(:,1),X4],[X5(:,1),X5]};
@@ -55,7 +55,7 @@ for p = 1:numel(priors)
     save(results_file,'results');                   % keep finished runs if a later one fails
 end
 % To redo only the figures later:  load(results_file); priors = fieldnames(results)';
-
+ 
 %% Ground truth (BINGO layout, self-loops removed)
 mask  = ~eye(n);
 GT    = (Ground_truth_oriented(1:n,1:n) ~= 0) & mask;
@@ -63,7 +63,7 @@ GTsym = (Ground_truth_symmetric(1:n,1:n) ~= 0) & mask;
 GTsym = GTsym | GTsym';
 upper_tri = triu(true(n),1);                 % each undirected gene pair once
 fprintf('\nGround truth: %d directed links, %d undirected pairs\n', nnz(GT), nnz(GTsym & upper_tri));
-
+ 
 %% ROC and PR curves, both priors in the same axes
 colors = lines(numel(priors));
 figure('Name','ROC and PR curves','Position',[100 100 1000 850]);
@@ -72,7 +72,7 @@ for p = 1:numel(priors)
     prior = priors{p};
     P = results.(prior).P .* mask;
     Psym = max(P, P');
-
+ 
     % directed: (i,j) scored separately from (j,i)
     [fpr,tpr,~,auc]     = perfcurve(GT(mask), P(mask), true);
     [rec,prc,~,aupr]    = perfcurve(GT(mask), P(mask), true, 'xCrit','reca','yCrit','prec');
@@ -81,7 +81,7 @@ for p = 1:numel(priors)
     [rec_u,prc_u,~,aupr_u] = perfcurve(GTsym(upper_tri), Psym(upper_tri), true, 'xCrit','reca','yCrit','prec');
     results.(prior).auroc = auc;   results.(prior).aupr = aupr;
     results.(prior).auroc_undirected = auc_u;  results.(prior).aupr_undirected = aupr_u;
-
+ 
     subplot(2,2,1); hold on; plot(fpr,tpr,'-','Color',colors(p,:),'LineWidth',1.5);
     subplot(2,2,2); hold on; plot(rec,prc,'-','Color',colors(p,:),'LineWidth',1.5);
     subplot(2,2,3); hold on; plot(fpr_u,tpr_u,'-','Color',colors(p,:),'LineWidth',1.5);
@@ -101,20 +101,20 @@ for s = 1:4
         plot([0 1],[0 1],'k--'); xlabel('False positive rate'); ylabel('True positive rate');
         legend([leg(s,:), {'random'}],'Location','southeast');
     else
-        yline(chance_pr((s+1)/2),'k--'); xlabel('Recall'); ylabel('Precision');
+        yline(chance_pr(s/2),'k--'); xlabel('Recall'); ylabel('Precision');
         legend([leg(s,:), {'random'}],'Location','northeast');
     end
     title(ttl{s}); axis square; grid on; box on;
 end
-
+ 
 %% Out-degree histograms: ground truth vs inferred networks at several thresholds
 thresholds = [0.5 0.3 0.1];
 BINS   = [0 0; 1 1; 2 2; 3 3; 4 5; 6 9; 10 19; 20 Inf];
 blabel = {'0','1','2','3','4-5','6-9','10-19','20+'};
-
+ 
 k_gt = sum(GT,1);                        % out-degree of each gene = column sum
 names = [{'ground truth'}, arrayfun(@(t) sprintf('inferred, P > %.1f', t), thresholds, 'UniformOutput', false)];
-
+ 
 figure('Name','Out-degree histograms','Position',[100 100 600*numel(priors) 450]);
 ax = gobjects(1,numel(priors));
 fprintf('\n%-10s %-9s %6s %8s %9s %5s\n','prior','threshold','edges','correct','precision','max');
@@ -143,8 +143,8 @@ end
 linkaxes(ax,'y');
 ylim(ax(1), [0.5, n]);
 fprintf('ground truth: %d edges, max out-degree %d\n', nnz(GT), max(k_gt));
-
-
+ 
+ 
 % -------------------------------------------------------------------------
 function c = bin_counts(k, BINS)
 % number of genes whose out-degree falls in each bin (column vector)
@@ -153,7 +153,7 @@ for b = 1:size(BINS,1)
     c(b) = sum(k >= BINS(b,1) & k <= BINS(b,2));
 end
 end
-
+ 
 function print_edges(state, n)
 kout = sum(state.S(1:n,1:n),1);
 fprintf('edges: %d, mean out-degree %.2f, max %d\n', sum(kout), mean(kout), max(kout));

@@ -4,9 +4,9 @@
 
 %Load data
 addpath('./BINGO_files/')
-load('./BINGO_files/DREAM100_05_full.mat')
-load('./BINGO_files/DREAM100_05_groundtruth_symmterical.mat')
-load('./BINGO_files/DREAM100_05_groundtruth_oriented.mat')
+load('./BINGO_files/DREAM100_01_full.mat')
+load('./BINGO_files/DREAM100_01_groundtruth_symmterical.mat')
+load('./BINGO_files/DREAM100_01_groundtruth_oriented.mat')
 
 clear('data')
 data.ts = {[X1(:,1),X1],[X2(:,1),X2],[X3(:,1),X3],[X4(:,1),X4],[X5(:,1),X5]};

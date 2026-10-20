@@ -21,7 +21,7 @@ parameters.link_pr = 0.00001;
 %Heuristic temperature variable to speed up the topology sampling. Value 1
 %is default option if it is not set, and it corresponds to exactly correct
 %sampling.
-parameters.Theur = 2.8;
+parameters.Theur = 3.1;
 
 %Number of iterations (in the burn-in)
 parameters.its = 40000;
