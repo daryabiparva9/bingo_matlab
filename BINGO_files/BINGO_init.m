@@ -3,28 +3,28 @@ function [data,state,parameters]=BINGO_init(data)
 %% Set the parameters of the sampler.
 
 %Step length of the Crank-Nicolson sampler (should be >.05)
-parameters.etraj = .1;
+parameters.etraj = .05;
 
 %Other step length parameters:
 parameters.egamma = .1;
 parameters.ea = .005;
 parameters.eb = .005;
 parameters.ebeta = .125;
-parameters.er = .0001;
+parameters.er = .00005;
 parameters.eq = .0002;
 
 %link_pr = p / (1-p) where p is the prior probability for the existence of
 %a link. This controls the sparsity level of the network. Default is 1/n if
 %it is not given.
-parameters.link_pr = 0.001;
+parameters.link_pr = 0.00001;
 
 %Heuristic temperature variable to speed up the topology sampling. Value 1
 %is default option if it is not set, and it corresponds to exactly correct
 %sampling.
-parameters.Theur = 2.5;
+parameters.Theur = 2.8;
 
 %Number of iterations (in the burn-in)
-parameters.its = 8000;
+parameters.its = 40000;
 
 %The number of steps in the trajectory between measurements. A good default
 %is 4, but the sampling gets faster if it is reduced.
@@ -115,8 +115,8 @@ if isfield(data,'input')
 end
 
 %Initial connectivity guess
-state.S = rand(n,n+n_in)>.9;
-
+state.S = rand(n,n+n_in)>.990;
+state.S(:,n+1:n+n_in) = true;
 %Initial state for hyperparameters beta
 state.bets = abs(randn(n,n+n_in)*.5) + 1e-3;
 
