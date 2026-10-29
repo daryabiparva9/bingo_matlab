@@ -60,13 +60,13 @@ for p = 1:numel(priors)
     end
 
     % Burn-in
-    [~,chain,~,state,stats] = BINGO_outdeg(data_p,state,parameters);
+    [~,chain,~,state,stats] = BINGO_outdeg_k0(data_p,state,parameters);
     disp_stats([' BURN-IN COMPLETE (' prior ')'],stats,chain,parameters.its)
     print_edges(state,n);
 
     % Actual sampling
-    parameters.its = 30000;
-    [Plink,chain,xstore,state,stats] = BINGO_outdeg(data_p,state,parameters);
+    parameters.its = 20000;
+    [Plink,chain,xstore,state,stats] = BINGO_outdeg_k0(data_p,state,parameters);
     disp_stats([' SAMPLING COMPLETE (' prior ')'],stats,chain,parameters.its)
     print_edges(state,n);
 

@@ -91,7 +91,7 @@ if use_outdeg
     else
         outdeg_opts = struct();
     end
-    logT = outdegree_logT(n,parameters.outdeg_prior,outdeg_opts);
+    logT = outdegree_logT_k0(n,parameters.outdeg_prior,outdeg_opts);
 end
 
 %Per-link likelihood correction (optional, default 0). Every link, gene-gene
