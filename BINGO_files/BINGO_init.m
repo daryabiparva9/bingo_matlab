@@ -24,7 +24,7 @@ parameters.link_pr = 0.00001;
 parameters.Theur = 2.8;
 
 %Number of iterations (in the burn-in)
-parameters.its = 50000;
+parameters.its = 30000;
 
 %The number of steps in the trajectory between measurements. A good default
 %is 4, but the sampling gets faster if it is reduced.

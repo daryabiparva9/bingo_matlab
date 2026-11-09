@@ -26,7 +26,7 @@ n = size(X1,1);
 
 % ---- Prior beliefs (not taken from the ground truth) ----------------------
 % Both priors encode the SAME expected number of regulators per gene, mean_k.
-mean_k = 1.5;
+mean_k = 3.8;
 % Original BINGO: every link independent with odds link_pr, so a gene expects
 % about link_pr*(n+n_in) regulators.
 n_in = size(data.input{1},1);
@@ -34,7 +34,7 @@ link_pr_belief = mean_k/(n + n_in);
 % Option C, maximum entropy with power-law out-degrees from k = 1: a fraction
 % 1-f of genes regulate nothing, regulators have k^-gamma targets (k <= k_max).
 % f follows from mean_k. Instead of mean_k you can give 'f' directly.
-outdeg_opts = struct('k0',1,'gamma',2.2,'k_max',25,'mean_k',mean_k);
+outdeg_opts = struct('k0',3,'gamma',2.10,'k_max',50,'mean_k',mean_k);
 
 % ---- Likelihood correction, identical for every prior ----------------------
 % BINGO's likelihood accepts extra regulators too easily, so every link gets the
