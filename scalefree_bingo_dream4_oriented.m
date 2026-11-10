@@ -4,9 +4,9 @@
 
 %Load data
 addpath('./BINGO_files/')
-load('./BINGO_files/DREAM100_01_full.mat')
-load('./BINGO_files/DREAM100_01_groundtruth_symmterical.mat')
-load('./BINGO_files/DREAM100_01_groundtruth_oriented.mat')
+load('./BINGO_files/DREAM100_05_full.mat')
+load('./BINGO_files/DREAM100_05_groundtruth_symmterical.mat')
+load('./BINGO_files/DREAM100_05_groundtruth_oriented.mat')
 
 clear('data')
 data.ts = {[X1(:,1),X1],[X2(:,1),X2],[X3(:,1),X3],[X4(:,1),X4],[X5(:,1),X5]};
@@ -19,7 +19,7 @@ input5 = [zeros(4,22); [0,ones(1,11),zeros(1,10)]];
 data.input = {input1,input2,input3,input4,input5};
 
 n = size(X1,1);
-outdeg_opts = struct('mean_k',2.0,'k0',4,'gamma',2.5,'k_max',50, 'edge_penalty',-7);  % prior guess, not from the ground truth
+outdeg_opts = struct('mean_k',2.5,'k0',4,'gamma',2.1,'k_max',50, 'edge_penalty',-6);  % prior guess, not from the ground truth
 
 for prior = {'C'}                 % add 'B' to compare all three
     rng(1)                                   % same random numbers for every prior
